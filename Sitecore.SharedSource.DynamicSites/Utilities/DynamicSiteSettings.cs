@@ -17,6 +17,7 @@ namespace Sitecore.SharedSource.DynamicSites.Utilities
         private const string DefaultSettingsItemPath = "/sitecore/system/Modules/Dynamic Sites/Dynamic Site Settings";
         private const string CacheKeySetting = "DynamicSites.SiteCache";
         private const string AutoPublishSetting = "DynamicSites.AutoPublish";
+        private const string FallbackCurrentDatabaseSetting = "DynamicSites.FallbackCurrentDatabase";
 
         private static string MaxCacheSize => Settings.GetSetting(MaxCacheSetting, "50MB");
 
@@ -27,6 +28,8 @@ namespace Sitecore.SharedSource.DynamicSites.Utilities
         public static string SiteName => Settings.GetSetting(SiteSetting, DefaultSitename);
 
         private static string SettingsItemPath => Settings.GetSetting(ItemPathSetting, DefaultSettingsItemPath);
+
+        private static string FallbackCurrentDatabase => Settings.GetSetting(FallbackCurrentDatabaseSetting, "master");
 
         public static bool IsInitialized => DynamicSiteManager.SettingsInitialized();
 
@@ -39,7 +42,7 @@ namespace Sitecore.SharedSource.DynamicSites.Utilities
 
         public static Item SitesFolder => GetSettingsItem?.SitesFolder.Item;
 
-        public static Database GetCurrentDatabase => Context.ContentDatabase ?? Context.Database ?? Database.GetDatabase("master");
+        public static Database GetCurrentDatabase => Context.ContentDatabase ?? Context.Database ?? Database.GetDatabase(FallbackCurrentDatabase);
 
         public static SiteCache GetSiteCache => new SiteCache(StringUtil.ParseSizeString(MaxCacheSize));
     }
